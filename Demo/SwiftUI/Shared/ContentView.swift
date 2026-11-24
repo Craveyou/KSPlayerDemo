@@ -111,13 +111,13 @@ enum TabBarItem: Int {
     var lable: Label<Text, Image> {
         switch self {
         case .Home:
-            return Label("Home", systemImage: "house.fill")
+            return Label("首页", systemImage: "house.fill")
         case .Favorite:
-            return Label("Favorite", systemImage: "star.fill")
+            return Label("收藏", systemImage: "star.fill")
         case .Files:
-            return Label("Files", systemImage: "folder.fill.badge.gearshape")
+            return Label("文件", systemImage: "folder.fill.badge.gearshape")
         case .Setting:
-            return Label("Setting", systemImage: "gear")
+            return Label("设置", systemImage: "gear")
         }
     }
 

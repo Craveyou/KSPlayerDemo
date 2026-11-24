@@ -66,7 +66,7 @@ struct FilesView: View {
             Button {
                 openFileImport = true
             } label: {
-                Label("Add Local M3U", systemImage: "plus.rectangle.on.folder.fill")
+                Label("添加本地 M3U", systemImage: "plus.rectangle.on.folder.fill")
             }
             #if !os(tvOS)
             .keyboardShortcut("o")
@@ -74,7 +74,7 @@ struct FilesView: View {
             Button {
                 addM3U = true
             } label: {
-                Label("Add Remote M3U", systemImage: "plus.app.fill")
+                Label("添加远程 M3U", systemImage: "plus.app.fill")
             }
             #if !os(tvOS)
             .keyboardShortcut("o", modifiers: [.command, .shift])
@@ -92,7 +92,7 @@ struct M3UView: View {
             Text(model.name ?? "")
                 .font(.title2)
                 .foregroundColor(.primary)
-            Text("total \(model.count) channels")
+            Text("共 \(model.count) 个频道")
                 .font(.callout)
                 .foregroundColor(.secondary)
             Text(model.m3uURL?.description ?? "")
@@ -104,7 +104,7 @@ struct M3UView: View {
                 Button {
                     model.delete()
                 } label: {
-                    Label("Delete", systemImage: "trash.fill")
+                    Label("删除", systemImage: "trash.fill")
                 }
             }
             Button {
@@ -112,7 +112,7 @@ struct M3UView: View {
                     try? await _ = model.parsePlaylist()
                 }
             } label: {
-                Label("Refresh", systemImage: "arrow.clockwise.circle")
+                Label("刷新", systemImage: "arrow.clockwise.circle")
             }
             #if !os(tvOS)
             Button {
@@ -123,7 +123,7 @@ struct M3UView: View {
                 UIPasteboard.general.setValue(model.m3uURL!, forPasteboardType: "public.url")
                 #endif
             } label: {
-                Label("Copy url", systemImage: "doc.on.doc.fill")
+                Label("复制链接", systemImage: "doc.on.doc.fill")
             }
             #endif
         }
@@ -145,12 +145,12 @@ struct AddM3UView: View {
     var body: some View {
         Form {
             Section {
-                TextField("URL", text: $url)
-                TextField("Name", text: $name)
+                TextField("链接", text: $url)
+                TextField("名称", text: $name)
             }
             Section {
-                Text("Links to playlists you add will be public. All people can see it. But only you can modify and delete")
-                Button("Done") {
+                Text("你添加的播放列表链接是公开的，所有人都能看到，但只有你能修改和删除")
+                Button("完成") {
                     if let url = URL(string: url.trimmingCharacters(in: NSMutableCharacterSet.whitespacesAndNewlines)) {
                         let name = name.trimmingCharacters(in: NSMutableCharacterSet.whitespacesAndNewlines)
                         appModel.addM3U(url: url, name: name.isEmpty ? nil : name)
@@ -161,7 +161,7 @@ struct AddM3UView: View {
                 .keyboardShortcut(.defaultAction)
                 #endif
                 #if os(macOS) || targetEnvironment(macCatalyst)
-                Button("Cancel") {
+                Button("取消") {
                     dismiss()
                 }
                 .keyboardShortcut(.cancelAction)

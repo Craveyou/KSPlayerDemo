@@ -57,13 +57,13 @@ struct TracyApp: App {
 //        .handlesExternalEvents(matching: Set(arrayLiteral: "*"))
         .commands {
             CommandGroup(before: .newItem) {
-                Button("Open") {
+                Button("打开文件") {
                     appModel.openFileImport = true
                 }
                 .keyboardShortcut("o")
             }
             CommandGroup(before: .newItem) {
-                Button("Open URL") {
+                Button("打开链接") {
                     appModel.openURLImport = true
                 }
                 .keyboardShortcut("o", modifiers: [.command, .shift])

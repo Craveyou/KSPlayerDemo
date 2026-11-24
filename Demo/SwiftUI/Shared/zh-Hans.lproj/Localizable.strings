@@ -1,0 +1,32 @@
+/* KSPlayer 播放器内核中文文案（zh-Hans） */
+
+/* 播放控制 */
+"speed" = "倍速";
+"select speed" = "选择倍速";
+"cancel" = "取消";
+"Done" = "完成";
+
+/* 轨道与清晰度 */
+"video quality" = "清晰度";
+"select video quality" = "选择清晰度";
+"switch video" = "切换画面";
+"switch audio" = "切换音轨";
+"Video Track" = "视频轨";
+"Live Streaming" = "直播";
+"Off" = "关闭";
+
+/* 字幕 */
+"subtitle" = "字幕";
+"no show subtitle" = "不显示字幕";
+"Disabled" = "关闭";
+"Sutitle delay" = "字幕延迟";
+"Search Sutitle" = "搜索字幕";
+"Title" = "标题";
+
+/* 亮度音量 */
+"brightness" = "亮度";
+"volume" = "音量";
+
+/* 其它 */
+"Open File" = "打开文件";
+"AirPlay 投放中" = "AirPlay 投放中";

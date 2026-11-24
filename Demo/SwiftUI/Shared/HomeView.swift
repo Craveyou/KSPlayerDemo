@@ -40,7 +40,7 @@ struct HomeView: View {
                     }
                 } header: {
                     HStack {
-                        Text("Recent Play").font(.title)
+                        Text("最近播放").font(.title)
                         Spacer()
                     }
                     .padding(.horizontal)
@@ -66,7 +66,7 @@ struct HomeView: View {
 
             } header: {
                 HStack {
-                    Text("Channels").font(.title)
+                    Text("频道列表").font(.title)
                     Spacer()
                 }
                 .padding(.horizontal)
@@ -87,7 +87,7 @@ struct HomeView: View {
             Button {
                 appModel.openFileImport = true
             } label: {
-                Label("Open File", systemImage: "plus.rectangle.on.folder.fill")
+                Label("打开文件", systemImage: "plus.rectangle.on.folder.fill")
             }
             #if !os(tvOS)
             .keyboardShortcut("o")
@@ -95,7 +95,7 @@ struct HomeView: View {
             Button {
                 appModel.openURLImport = true
             } label: {
-                Label("Open URL", systemImage: "plus.app.fill")
+                Label("打开链接", systemImage: "plus.app.fill")
             }
             #if !os(tvOS)
             .keyboardShortcut("o", modifiers: [.command, .shift])
@@ -109,8 +109,8 @@ struct HomeView: View {
                     return partialResult
                 }
             }.sorted()
-            Picker("group filter", selection: $groupFilter) {
-                Text("All").tag(nil as String?)
+            Picker("分组筛选", selection: $groupFilter) {
+                Text("全部").tag(nil as String?)
                 ForEach(groups) { group in
                     Text(group).tag(group as String?)
                 }
@@ -155,7 +155,7 @@ struct MoiveView: View {
                 try? model.managedObjectContext?.save()
             } label: {
                 let isFavorite = model.isFavorite
-                Label(isFavorite ? "Cancel favorite" : "Favorite", systemImage: isFavorite ? "star" : "star.fill")
+                Label(isFavorite ? "取消收藏" : "收藏", systemImage: isFavorite ? "star" : "star.fill")
             }
             #if !os(tvOS)
             Button {
@@ -166,7 +166,7 @@ struct MoiveView: View {
                 UIPasteboard.general.setValue(model.url!, forPasteboardType: "public.url")
                 #endif
             } label: {
-                Label("Copy url", systemImage: "doc.on.doc.fill")
+                Label("复制链接", systemImage: "doc.on.doc.fill")
             }
             #endif
         }

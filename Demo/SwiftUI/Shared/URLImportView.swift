@@ -20,11 +20,11 @@ struct URLImportView: View {
     var body: some View {
         Form {
             Section {
-                TextField("URL:", text: $playURL)
-                Toggle("Remember URL", isOn: $rememberURL)
+                TextField("视频链接：", text: $playURL)
+                Toggle("记住链接", isOn: $rememberURL)
                 if !historyURLs.isEmpty {
-                    Picker("History URL", selection: $playURL) {
-                        Text("None").tag("")
+                    Picker("历史链接", selection: $playURL) {
+                        Text("无").tag("")
                         ForEach(historyURLs) {
                             Text($0.description).tag($0.description)
                         }
@@ -35,12 +35,12 @@ struct URLImportView: View {
                 }
             }
 
-            Section("HTTP Authentication") {
-                TextField("Username:", text: $username)
-                SecureField("Password:", text: $password)
+            Section("HTTP 认证") {
+                TextField("用户名：", text: $username)
+                SecureField("密码：", text: $password)
             }
             Section {
-                Button("Done") {
+                Button("完成") {
                     dismiss()
                     let urlString = playURL.trimmingCharacters(in: NSMutableCharacterSet.whitespacesAndNewlines)
                     if !urlString.isEmpty, var components = URLComponents(string: urlString) {
@@ -69,7 +69,7 @@ struct URLImportView: View {
                 .keyboardShortcut(.defaultAction)
                 #endif
                 #if os(macOS) || targetEnvironment(macCatalyst)
-                Button("Cancel") {
+                Button("取消") {
                     dismiss()
                 }
                 .keyboardShortcut(.cancelAction)
