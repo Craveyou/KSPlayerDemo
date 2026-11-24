@@ -1,0 +1,60 @@
+# 云端编译 KSPlayer 官方 Demo（SimplePlayer，SwiftUI + SPM，FFmpegKit 预编译二进制自动下载）
+# 产物：未签名 ipa，覆盖安装自用测试
+name: build demo ipa
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 环境信息
+        run: |
+          xcodebuild -version
+          xcrun simctl list runtimes | head -5
+
+      - name: 解析 SPM 依赖（下载 FFmpegKit 预编译 xcframework）
+        working-directory: Demo/SwiftUI
+        run: |
+          xcodebuild -project Player.xcodeproj -scheme SimplePlayer \
+            -resolvePackageDependencies
+
+      - name: 构建 SimplePlayer（未签名）
+        working-directory: Demo/SwiftUI
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project Player.xcodeproj \
+            -scheme SimplePlayer \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGN_IDENTITY="" \
+            -derivedDataPath build \
+            | tail -40
+
+      - name: 打包未签名 ipa
+        run: |
+          APP=$(find Demo/SwiftUI/build/Build/Products/Release-iphoneos -maxdepth 1 -name "*.app" | head -1)
+          test -n "$APP" || { echo "::error::找不到 .app"; exit 1; }
+          echo "APP: $APP"
+          rm -rf "$RUNNER_TEMP/ipa"
+          mkdir -p "$RUNNER_TEMP/ipa/Payload"
+          ditto "$APP" "$RUNNER_TEMP/ipa/Payload/SimplePlayer.app"
+          IPA="$GITHUB_WORKSPACE/KSPlayer-Demo-unsigned.ipa"
+          (cd "$RUNNER_TEMP/ipa" && zip -q -r "$IPA" Payload)
+          echo "== ipa 内容 =="
+          unzip -l "$IPA" | head -16
+          echo "IPA_NAME=KSPlayer-Demo-unsigned.ipa" >> "$GITHUB_ENV"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: KSPlayer-Demo-unsigned-ipa
+          path: KSPlayer-Demo-unsigned.ipa
+          retention-days: 30
