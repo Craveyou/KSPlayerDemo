@@ -615,7 +615,7 @@
 /* Begin XCLocalSwiftPackageReference section */
 		AC67EBA030767CC200642B68 /* XCLocalSwiftPackageReference "../../../KSPlayer" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = ../../../KSPlayer;
+			relativePath = "../..";
 		};
 /* End XCLocalSwiftPackageReference section */
 
