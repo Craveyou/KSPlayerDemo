@@ -1,5 +1,3 @@
 # 格式化规则
---swiftversion 6.3
---ifdef preserve
---disable conditionalAssignment
---trailing-commas collections-only
+--swiftversion 5.7
+--ifdef noindent

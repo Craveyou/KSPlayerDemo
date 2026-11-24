@@ -1,4 +1,4 @@
-# 云端编译 KSPlayer 官方 Demo（SimplePlayer，SwiftUI + SPM，FFmpegKit 预编译二进制自动下载）
+# 云端编译 KSPlayer 2.3.4 官方 Demo（Player，SwiftUI + SPM 源码版，FFmpegKit 预编译二进制自动下载）
 # 产物：未签名 ipa，覆盖安装自用测试
 name: build demo ipa
 
@@ -21,16 +21,16 @@ jobs:
       - name: 解析 SPM 依赖（下载 FFmpegKit 预编译 xcframework）
         working-directory: Demo/SwiftUI
         run: |
-          xcodebuild -project Player.xcodeproj -scheme SimplePlayer \
+          xcodebuild -project Player.xcodeproj -scheme Player \
             -resolvePackageDependencies
 
-      - name: 构建 SimplePlayer（未签名）
+      - name: 构建 Player（未签名）
         working-directory: Demo/SwiftUI
         run: |
           set -o pipefail
           xcodebuild \
             -project Player.xcodeproj \
-            -scheme SimplePlayer \
+            -scheme Player \
             -configuration Release \
             -sdk iphoneos \
             -destination 'generic/platform=iOS' \
@@ -46,12 +46,11 @@ jobs:
           echo "APP: $APP"
           rm -rf "$RUNNER_TEMP/ipa"
           mkdir -p "$RUNNER_TEMP/ipa/Payload"
-          ditto "$APP" "$RUNNER_TEMP/ipa/Payload/SimplePlayer.app"
+          ditto "$APP" "$RUNNER_TEMP/ipa/Payload/Player.app"
           IPA="$GITHUB_WORKSPACE/KSPlayer-Demo-unsigned.ipa"
           (cd "$RUNNER_TEMP/ipa" && zip -q -r "$IPA" Payload)
           echo "== ipa 内容 =="
           unzip -l "$IPA" | head -16
-          echo "IPA_NAME=KSPlayer-Demo-unsigned.ipa" >> "$GITHUB_ENV"
 
       - uses: actions/upload-artifact@v4
         with:

@@ -1,83 +1,53 @@
-// swift-tools-version:6.2
+// swift-tools-version:5.9
 import Foundation
 import PackageDescription
 
 let package = Package(
     name: "KSPlayer",
     defaultLocalization: "en",
-    platforms: [
-        .iOS(.v13), .macCatalyst(.v14), .macOS(.v10_15), .tvOS(.v13), .visionOS(.v1),
-//        .watchOS(.v9),
-    ],
+    platforms: [.macOS(.v10_15), .macCatalyst(.v13), .iOS(.v13), .tvOS(.v13),
+                .visionOS(.v1)],
     products: [
         // Products define the executables and libraries produced by a package, and make them visible to other packages.
         .library(
             name: "KSPlayer",
-            targets: ["KSPlayer"]
-        ),
-        .library(
-            name: "KSPlayerUI",
             // todo clang: warning: using sysroot for 'iPhoneSimulator' but targeting 'MacOSX' [-Wincompatible-sysroot]
-            type: ProcessInfo.processInfo.environment["dynamicFrameWork"] == nil ? .static : .dynamic,
-            targets: ["KSPlayerUI"]
-        ),
-        .library(
-            name: "MPVPlayer",
-            type: ProcessInfo.processInfo.environment["dynamicFrameWork"] == nil ? .static : .dynamic,
-            targets: ["MPVPlayer"]
+//            type: .dynamic,
+            targets: ["KSPlayer"]
         ),
     ],
     targets: [
-        .binaryTarget(
+        // Targets are the basic building blocks of a package. A target can define a module or a test suite.
+        .target(
             name: "KSPlayer",
-            path: "Sources/KSPlayer.xcframework"
-        ),
-        .target(
-            name: "MPVPlayer",
             dependencies: [
-                .product(name: "libmpv", package: "FFmpegKit"),
-                "KSPlayer",
+                .product(name: "FFmpegKit", package: "FFmpegKit"),
+//                .product(name: "Libass", package: "FFmpegKit"),
+//                .product(name: "Libmpv", package: "FFmpegKit"),
+                "DisplayCriteria",
             ],
+            resources: [.process("Metal/Shaders.metal")],
             swiftSettings: [
-                .unsafeFlags([
-                    "-experimental-package-interface-load",
-                ]),
+                .enableExperimentalFeature("StrictConcurrency"),
             ]
         ),
         .target(
-            name: "KSPlayerUI",
-            dependencies: [
-                "FFmpegKit",
-                "KSPlayer",
-            ],
-            resources: [
-                .process("Localizable.xcstrings"),
-            ],
-            swiftSettings: [
-                .unsafeFlags([
-                    "-experimental-package-interface-load",
-                ]),
-            ]
+            name: "DisplayCriteria"
         ),
         .testTarget(
-            name: "KSPlayerUITests",
-            dependencies: ["KSPlayerUI"],
-            swiftSettings: [
-                .unsafeFlags([
-                    "-experimental-package-interface-load",
-                ]),
-            ]
+            name: "KSPlayerTests",
+            dependencies: ["KSPlayer"],
+            resources: [.process("Resources")]
         ),
-    ],
-    swiftLanguageModes: [
-        .v5,
-        .v6,
     ]
 )
 
-var ffmpegKitPath = FileManager.default.currentDirectoryPath + "/../FFmpegKit"
-// spm FileManager.default.currentDirectoryPath返回的空字符，spm6.0#file返回的不是当前的目录。要改成用#filePath
-if !FileManager.default.fileExists(atPath: ffmpegKitPath), let url = URL(string: #filePath) {
+var ffmpegKitPath = FileManager.default.currentDirectoryPath + "/FFmpegKit"
+if !FileManager.default.fileExists(atPath: ffmpegKitPath) {
+    ffmpegKitPath = FileManager.default.currentDirectoryPath + "/../FFmpegKit"
+}
+
+if !FileManager.default.fileExists(atPath: ffmpegKitPath), let url = URL(string: #file) {
     let path = url.deletingLastPathComponent().path
     // 解决用xcode引入spm的时候，依赖关系出错的问题
     if !path.contains("/checkouts/") {
@@ -91,6 +61,6 @@ if FileManager.default.fileExists(atPath: ffmpegKitPath + "/Package.swift") {
     ]
 } else {
     package.dependencies += [
-        .package(url: "https://github.com/kingslay/FFmpegKit.git", from: "9.0.2"),
+        .package(url: "https://github.com/kingslay/FFmpegKit.git", from: "6.1.3"),
     ]
 }
